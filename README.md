@@ -1,1 +1,1 @@
-# Alchemy Template
+# Go Application
