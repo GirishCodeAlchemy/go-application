@@ -1,3 +1,3 @@
-module go-application
+module github.com/GirishCodeAlchemy/go-application
 
-go 1.22.5
+go 1.21.0

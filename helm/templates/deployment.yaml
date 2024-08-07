@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-application
+  namespace: go-application
+  labels:
+    role: go-application
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: go-application
+  template:
+    metadata:
+      labels:
+        role: go-application
+    spec:
+      containers:
+      - name: go-application
+        image: girishcodealchemy/go-application:{{ .Values.image.tag }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
