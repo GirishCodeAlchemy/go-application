@@ -1,8 +1,8 @@
 [build]
   command = "chmod +x ./build.sh && ./build.sh"
   functions = "functions"
-  publish = "public"
+  publish = "static"
 
 [build.environment]
-  GO_IMPORT_PATH = "github.com/girishcodealchemy/go-application"
+  GO_IMPORT_PATH = "github.com/GirishCodeAlchemy/go-application"
   GO111MODULE = "on"
