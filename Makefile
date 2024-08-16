@@ -1,11 +1,6 @@
 .PHONY: run clean docs
 
-black:
-	black .
-
-# test:
-# 	coverage run -m pytest tests && coverage html && open htmlcov/index.html
-
-type-check:
-	mypy .
-
+build:
+	mkdir -p functions
+	cp -r ./api/static functions/
+	GOOS=linux GOARCH=amd64 go build -o functions/main ./api/lambda_handler.go

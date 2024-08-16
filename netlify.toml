@@ -1,4 +1,6 @@
 [build]
-  command = "go build"
+  command = "make build"
   functions = "functions"
   publish = "./"
+
+    
