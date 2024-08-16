@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"os"
+	"bytes"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -14,7 +15,10 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 	// Serve files from the "static" directory
 	fs := http.FileServer(http.Dir("static"))
 
-	// Create a request that can be handled by the file server
+	// Create a custom ResponseRecorder
+	rr := &responseRecorder{header: http.Header{}}
+
+	// Create a new HTTP request
 	req, err := http.NewRequest(request.HTTPMethod, request.Path, nil)
 	if err != nil {
 		return &events.APIGatewayProxyResponse{
@@ -23,13 +27,12 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 		}, nil
 	}
 
-	// Capture the response using a ResponseRecorder
-	rr := &responseRecorder{ResponseWriter: http.NewResponseWriter(), statusCode: 200}
+	// Serve the HTTP request
 	fs.ServeHTTP(rr, req)
 
 	return &events.APIGatewayProxyResponse{
 		StatusCode: rr.statusCode,
-		Body:       rr.body,
+		Body:       rr.body.String(),
 		Headers:    map[string]string{"Content-Type": rr.header.Get("Content-Type")},
 	}, nil
 }
@@ -45,25 +48,19 @@ func main() {
 
 // Custom response recorder to capture the HTTP response
 type responseRecorder struct {
-	http.ResponseWriter
-	statusCode int
-	body       string
 	header     http.Header
+	body       bytes.Buffer
+	statusCode int
+}
+
+func (r *responseRecorder) Header() http.Header {
+	return r.header
+}
+
+func (r *responseRecorder) Write(body []byte) (int, error) {
+	return r.body.Write(body)
 }
 
 func (r *responseRecorder) WriteHeader(statusCode int) {
 	r.statusCode = statusCode
-	r.ResponseWriter.WriteHeader(statusCode)
-}
-
-func (r *responseRecorder) Write(body []byte) (int, error) {
-	r.body = string(body)
-	return r.ResponseWriter.Write(body)
-}
-
-func (r *responseRecorder) Header() http.Header {
-	if r.header == nil {
-		r.header = http.Header{}
-	}
-	return r.header
 }
