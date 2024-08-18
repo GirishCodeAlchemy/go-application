@@ -38,7 +38,10 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 	cwd, err := os.Getwd()
 	if err != nil {
 		fmt.Println("Error getting current directory:", err)
-		return
+		return &events.APIGatewayProxyResponse{
+			StatusCode: 500,
+			Body:       "Internal Server Error",
+		}, nil
 	}
 	fmt.Println("Current Directory:", cwd)
 
