@@ -76,6 +76,7 @@ func main() {
 	fmt.Println("Starting the main code")
 	// Ensure the "static" directory exists
 	if _, err := os.Stat("static"); os.IsNotExist(err) {
+		fmt.Println("Static file not present the main code")
 		os.Mkdir("static", os.ModePerm)
 	}
 
