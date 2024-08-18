@@ -5,19 +5,20 @@ import (
 	"net/http"
 	"os"
 	"bytes"
-
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 // Handler for API Gateway requests
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
+	fmt.Println("Starting the handler code")
 	// Serve files from the "static" directory
 	fs := http.FileServer(http.Dir("static"))
 
 	// Create a custom ResponseRecorder
 	rr := &responseRecorder{header: http.Header{}}
-
+	fmt.Println("Starting the main code", rr)
 	// Create a new HTTP request
 	req, err := http.NewRequest(request.HTTPMethod, request.Path, nil)
 	if err != nil {
@@ -38,6 +39,7 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 }
 
 func main() {
+	fmt.Println("Starting the main code")
 	// Ensure the "static" directory exists
 	if _, err := os.Stat("static"); os.IsNotExist(err) {
 		os.Mkdir("static", os.ModePerm)
