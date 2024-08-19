@@ -1,7 +1,7 @@
 [build]
   command = "make build"
   functions = "functions"
-  publish = "functions/static"
+  publish = "api/static"
 
 
 [[redirects]]
