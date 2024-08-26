@@ -17,15 +17,12 @@ func PrintDirTree(path string, indent string) {
 		fmt.Println("Error reading directory:", err)
 		return
 	}
-
 	for i, entry := range entries {
 		prefix := "├── "
 		if i == len(entries)-1 {
 			prefix = "└── "
 		}
-
 		fmt.Println(indent + prefix + entry.Name())
-
 		if entry.IsDir() {
 			PrintDirTree(filepath.Join(path, entry.Name()), indent+"    ")
 		}
@@ -79,7 +76,6 @@ func main() {
 		fmt.Println("Static file not present the main code")
 		os.Mkdir("static", os.ModePerm)
 	}
-
 	lambda.Start(handler)
 }
 
